@@ -19,7 +19,7 @@ namespace GameFramework.Addressable
             
             var result = await Addressables.InitializeAsync();  
             _isInitialized = true;
-            GameLog.Debug("Percent Asset Initialized successfully.");
+            GameLog.Debug("[GAddressable] Initialized");
             return result;
         }
 

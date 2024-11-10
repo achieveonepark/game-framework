@@ -9,9 +9,9 @@ namespace GameFramework
     /// <typeparam name="T"></typeparam>
     public abstract class PersistentMonoSingleton<T> : MonoSingleton<T> where T : MonoSingleton<T>
     {
-        protected override void OnInitializing()
+        protected override void OnInitialized()
         {
-            base.OnInitializing();
+            base.OnInitialized();
             if (Application.isPlaying)
             {
                 DontDestroyOnLoad(gameObject);

@@ -5,6 +5,8 @@ namespace GameFramework
 {
     public abstract class GScriptableObject : ScriptableObject
     {
+        private static readonly string assetPath = $"Assets/Framework/Resources/Settings";
+        private static readonly string resourcePath = "Settings";
         /// <summary>
         /// Assets 폴더 내에서 지정된 ScriptableObject 타입을 GUID로 조회하고, 없으면 자동으로 생성합니다.
         /// </summary>
@@ -13,7 +15,7 @@ namespace GameFramework
         public static T GetOrAdd<T>() where T : ScriptableObject
         {
             // Resources 폴더에서 ScriptableObject를 검색
-            T asset = Resources.Load<T>(typeof(T).Name);
+            T asset = Resources.Load<T>($"{resourcePath}/{typeof(T).Name}");
 
             if (asset == null)
             {
@@ -21,8 +23,6 @@ namespace GameFramework
                 asset = CreateInstance<T>();
 
 #if UNITY_EDITOR
-                // Editor에서만 파일로 저장
-                string assetPath = "Assets/Resources/GameFramework/Settings";
                 if (!Directory.Exists(assetPath))
                 {
                     Directory.CreateDirectory(assetPath);
@@ -49,7 +49,6 @@ namespace GameFramework
             T asset = CreateInstance<T>();
 
             // ScriptableObject를 저장할 경로 설정
-            string assetPath = "Assets/GameFramework/Settings";
             if (!Directory.Exists(assetPath))
             {
                 Directory.CreateDirectory(assetPath);
@@ -63,8 +62,6 @@ namespace GameFramework
             return asset;
         }
         
-
-
         /// <summary>
         /// Project 뷰에서 특정 Asset 파일을 Ping하고 강조 표시합니다.
         /// </summary>

@@ -18,6 +18,7 @@ namespace GameFramework
             {
                 _instance = new UIBindingManager();
                 _instance._asyncMessageBus = new ConcurrentDictionary<Type, AsyncMessageBus>();
+                GameLog.Debug("[UIBindingManager] Initialized");
             }
         }
 

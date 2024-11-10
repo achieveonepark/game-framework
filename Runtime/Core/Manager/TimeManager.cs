@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using GameFramework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -26,7 +27,8 @@ public static class TimeManager
     {
         await GetNetworkTimeAsync();
         _startTimer = Time.unscaledTime;
-        await OnCheck_1Sec();
+        OnCheck_1Sec().Forget();
+        GameLog.Debug("[TimeManager] Initialized");
     }
     
     private static async UniTask GetNetworkTimeAsync()

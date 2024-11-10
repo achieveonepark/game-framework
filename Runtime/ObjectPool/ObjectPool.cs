@@ -10,9 +10,9 @@ namespace GameFramework
         [SerializeField] private int _addSize;
         private Queue<T> _objects = new Queue<T>();
         
-        protected override void OnInitializing()
+        protected override void OnInitialized()
         {
-            base.OnInitializing();
+            base.OnInitialized();
             AddSize(_initializeSize);
         }
         

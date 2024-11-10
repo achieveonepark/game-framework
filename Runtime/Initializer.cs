@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace GameFramework
 {
@@ -7,12 +6,10 @@ namespace GameFramework
     {
         public static async UniTask InitializeForRuntime()
         {
-            var settings = GScriptableObject.GetOrAdd<InitializeSettings>();
-
-            ConfigManager.Initialize();
             GameLog.Initialize();
             await TimeManager.Initialize();
-            Data.SetDB($"{settings.DBPath}");
+            ConfigManager.Initialize();
+            Data.Initialize();
             UIBindingManager.Initialize();
         }
     }

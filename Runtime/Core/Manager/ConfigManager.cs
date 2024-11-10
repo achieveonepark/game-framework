@@ -12,6 +12,7 @@ namespace GameFramework
         internal static void Initialize()
         {
             _configs = DictionaryPrefs.LoadDictionary<string, object>(dicKey);
+            GameLog.Debug("[ConfigManager] Initialized");
         }
         
         public static void AddKey(string key, object value)

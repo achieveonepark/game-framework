@@ -82,11 +82,6 @@ namespace GameFramework
 
         }
 
-        protected virtual void OnInitializing()
-        {
-
-        }
-
         protected virtual void OnInitialized()
         {
 

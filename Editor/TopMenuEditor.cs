@@ -9,7 +9,7 @@ namespace Editor
         public static void CreateInitializeSettings()
         {
             var asset = InitializeSettings.Add<InitializeSettings>();
-            InitializeSettings.PingAsset();
+            InitializeSettings.PingAsset<InitializeSettings>();
         }
         
         
