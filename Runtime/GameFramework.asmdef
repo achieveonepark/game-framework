@@ -1,0 +1,37 @@
+{
+    "name": "GameFramework",
+    "rootNamespace": "",
+    "references": [
+        "GUID:aed8d7317cce44904bbc53d7eb6147f8",
+        "GUID:17f96cd3b93974f6493e51a2f25c1241",
+        "GUID:27ce8faacdde34e508755900548477aa",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:9e24947de15b9834991c9d8411ea37cf",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:dc47925d1a5fa2946bdd37746b2b5d48",
+        "GUID:593a5b492d29ac6448b1ebf7f035ef33",
+        "GUID:8161667de84644ec1b7c7b2a6d8e757d",
+        "GUID:84651a3751eca9349aac36a66bba901b",
+        "GUID:7988c03078378034c94c47b8f742023d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.textmeshpro",
+            "expression": "0.0.1",
+            "define": "USE_TMP"
+        },
+        {
+            "name": "com.unity.addressables",
+            "expression": "0.0.1",
+            "define": "USE_ADDRESSABLE"
+        }
+    ],
+    "noEngineReferences": false
+}
