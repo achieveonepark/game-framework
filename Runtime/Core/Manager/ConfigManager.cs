@@ -9,6 +9,11 @@ namespace GameFramework
         
         private static Dictionary<string, object> _configs;
 
+        internal static void Initialize()
+        {
+            _configs = DictionaryPrefs.LoadDictionary<string, object>(dicKey);
+        }
+        
         public static void AddKey(string key, object value)
         {
             if (!_configs.ContainsKey(key))

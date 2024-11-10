@@ -1,7 +1,8 @@
 namespace GameFramework
 {
-    public class InitializeSettings : UnityEngine.ScriptableObject
+    public class InitializeSettings : GScriptableObject
     {
         public string DBPath;
+
     }
 }

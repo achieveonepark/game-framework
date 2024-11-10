@@ -5,14 +5,14 @@ namespace GameFramework
 {
     public class Initializer : PersistentMonoSingleton<Initializer>
     {
-        [SerializeField] private InitializeSettings _settings;
-        private static InitializeSettings _initializeSettings => Instance._settings;
-        
         public static async UniTask InitializeForRuntime()
         {
+            var settings = GScriptableObject.GetOrAdd<InitializeSettings>();
+
+            ConfigManager.Initialize();
             GameLog.Initialize();
-            // await TimeManager.Initialize();
-            // Data.SetDB(_initializeSettings.DBPath);
+            await TimeManager.Initialize();
+            Data.SetDB($"{settings.DBPath}");
             UIBindingManager.Initialize();
         }
     }
