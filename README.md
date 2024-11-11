@@ -18,7 +18,7 @@ I’ve added classes and plugins to streamline development in Unity.
 2. [Data Protector](https://github.com/achieveonepark/dataprotector): Encryption and decryption functionality with AES-128 support
 3. [Infinity Value](https://github.com/achieveonepark/infinityValue): Struct for infinite numbers with thousand-unit grouping
 4. [Smart Addressables](https://github.com/achieveonepark/SmartAddressables): Enhance the convenience and efficiency of using Unity's Addressables.
-5. [Lite DB](https://github.com/achieveonepark/SmartAddressables): Efficiently manages data using SQLite.
+5. [Lite DB](https://github.com/achieveonepark/LiteDB): Efficiently manages data using SQLite.
 
 ## Quick Start
 
