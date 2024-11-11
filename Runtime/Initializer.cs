@@ -1,3 +1,4 @@
+using Achieve.Database;
 using Cysharp.Threading.Tasks;
 
 namespace GameFramework
@@ -6,10 +7,12 @@ namespace GameFramework
     {
         public static async UniTask InitializeForRuntime()
         {
+            var settings = InitializeSettings.GetOrAdd<InitializeSettings>();
+            
             GameLog.Initialize();
             await TimeManager.Initialize();
             ConfigManager.Initialize();
-            Data.Initialize();
+            LiteDB.Initialize(settings.DBPath);
             UIBindingManager.Initialize();
         }
     }

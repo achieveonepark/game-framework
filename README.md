@@ -10,15 +10,15 @@ I’ve added classes and plugins to streamline development in Unity.
 4. [UIBinding using UniTaskPubSub](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#uibinding-using-unitaskpubsub)
 5. [Singleton Pattern](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#singleton)
 6. [Logging](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#logging)
-7. [Data Management with SQLite](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#data-management-with-sqlite)
-8. [User-Friendly UnityWebRequest Wrapper](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#user-friendly-unitywebrequest-wrapper)
-9. [Addressables](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#addressables)
+7. [User-Friendly UnityWebRequest Wrapper](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#user-friendly-unitywebrequest-wrapper)
 
 
 ### Recommended Assets to Use Together:
 1. [Quick Save](https://github.com/achieveonepark/quicksave): Local data save functionality using MemoryPack
 2. [Data Protector](https://github.com/achieveonepark/dataprotector): Encryption and decryption functionality with AES-128 support
 3. [Infinity Value](https://github.com/achieveonepark/infinityValue): Struct for infinite numbers with thousand-unit grouping
+4. [Smart Addressables](https://github.com/achieveonepark/SmartAddressables): Enhance the convenience and efficiency of using Unity's Addressables.
+5. [Lite DB](https://github.com/achieveonepark/SmartAddressables): Efficiently manages data using SQLite.
 
 ## Quick Start
 
@@ -109,23 +109,6 @@ GameLog.Error("Error");
 throw GameLog.Fatal("Fatal");
 ```
 
-### Data Management with SQLite
-
-#### Adding Data to the Database
-
-1. Click **GameFramework > Data > CsvImporter** at the top of the editor.
-2. Cache the db file and csv file, then hit **Insert!**
-
-```csharp
-Data.SetDB($"{Application.dataPath}/Resources/data.db"); // Path
-
-var a = Data.Get<Quest>(1);
-if (Data.TryGetValue<Quest, int>("Quest", 1, out var quest))
-{
-    var reward = quest.reward;
-}
-```
-
 ### User-Friendly UnityWebRequest Wrapper
 
 This class is designed to wrap UnityWebRequest for a cleaner and more user-friendly experience.
@@ -141,29 +124,4 @@ if (result.Success)
     var resultBytes = result.ReceiveData;
     var resultStr = result.ReceiveDataString;
 }
-```
-
-### Addressables
-
->Note: This feature works only when Addressables is installed.
-
-Provides efficient logic for using Unity Addressables, with explanations on caching and releasing memory for each scene.
-
-```csharp
-// Load default Addressable resources
-await GAddressable.InitializeAsync();
-
-// Load only the assets labeled "titlescene"
-var resource = await GAddressable.LoadResourcesAsync("titlescene");
-
-// Cache AssetRef in memory
-var memoryInObj = resource.GetObject<GameObject>("A/S/D");
-Instantiate(memoryInObj);
-
-// Instantiate AssetRef directly
-var createObj = resource.Instantiate<GameObject>("A/S/D");
-
-// Release
-resource.Release();
-
 ```
