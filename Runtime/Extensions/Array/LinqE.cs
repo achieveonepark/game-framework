@@ -151,16 +151,14 @@ namespace GameFramework
 
 			bool assignedMinimum = false; //Used so we don't have to use a 'default' value
 
-			enumerable.ForEach(
-				n =>
+			foreach (var n in enumerable)
+			{
+				if (!assignedMinimum || selector(n).CompareTo(selector(minimum)) < 0)
 				{
-					if (!assignedMinimum || selector(n).CompareTo(selector(minimum)) < 0)
-					{
-						minimum = n;
-						assignedMinimum = true;
-					}
+					minimum = n;
+					assignedMinimum = true;
 				}
-			);
+			}
 
 			return minimum;
 		}
@@ -174,16 +172,14 @@ namespace GameFramework
 
 			bool assignedMaximum = false; //Used so we don't have to use a 'default' value
 
-			enumerable.ForEach(
-				n =>
+			foreach (var n in enumerable)
+			{
+				if (!assignedMaximum || selector(n).CompareTo(selector(maximum)) > 0)
 				{
-					if (!assignedMaximum || selector(n).CompareTo(selector(maximum)) > 0)
-					{
-						maximum = n;
-						assignedMaximum = true;
-					}
+					maximum = n;
+					assignedMaximum = true;
 				}
-			);
+			}
 
 			return maximum;
 		}
