@@ -3,29 +3,54 @@ using UnityEngine;
 
 namespace GameFramework
 {
-    public class ObjectPool<T> : MonoSingleton<ObjectPool<T>> where T : MonoBehaviour
+    public class ObjectPool : MonoBehaviour
     {
-        [SerializeField] private T createPrefab;
+        [SerializeField] private GameObject createPrefab;
         [SerializeField] private int _initializeSize;
         [SerializeField] private int _addSize;
-        private Queue<T> _objects = new Queue<T>();
         
-        protected override void OnInitialized()
+        private Queue<GameObject> _objects = new Queue<GameObject>();
+        
+        public void Initialize()
         {
-            base.OnInitialized();
             AddSize(_initializeSize);
         }
         
-        public T Get() => GetInternal(Vector2.zero, null);
-        public T Get(Vector2 pos) => GetInternal(pos, null);
-        public T Get(Transform parent) => GetInternal(Vector2.zero, parent);
-        public T Get(Vector2 pos, Transform parent) => GetInternal(pos, parent);
+        public GameObject Get() => GetInternal(Vector2.zero, null);
+        public GameObject Get(Vector2 pos) => GetInternal(pos, null);
+        public GameObject Get(Transform parent) => GetInternal(Vector2.zero, parent);
+        public GameObject Get(Vector2 pos, Transform parent) => GetInternal(pos, parent);
+
+        public T Get<T>() where T : MonoBehaviour
+        {
+            var obj = GetInternal(Vector2.zero, null);   
+            return obj.TryGetComponent(out T component) ? component : null;
+        }
+
+        public T Get<T>(Vector2 pos) where T : MonoBehaviour
+        {
+            var obj = GetInternal(pos, null);
+            return obj.TryGetComponent(out T component) ? component : null;
+        }
+        
+        public T Get<T>(Transform parent) where T : MonoBehaviour
+        {
+            var obj = GetInternal(Vector2.zero, parent);
+            return obj.TryGetComponent(out T component) ? component : null;
+        }
+
+        public T Get<T>(Vector2 pos, Transform parent) where T : MonoBehaviour
+        {
+            var obj = GetInternal(pos, parent);
+            return obj.TryGetComponent(out T component) ? component : null;
+        }
+
 
         /// <summary>
         /// Pool에서 Object를 받아옵니다.
         /// </summary>
         /// <returns></returns>
-        private T GetInternal(Vector2 position, Transform parent)
+        private GameObject GetInternal(Vector2 position, Transform parent)
         {
             if (_objects.Count == 0)
             {
@@ -37,11 +62,11 @@ namespace GameFramework
 
             if (position == Vector2.zero)
             {
-                obj.ResetPosition();
+                obj.ResetLocalPosition();
             }
             else
             {
-                obj.SetPosition(position);
+                obj.SetLocalPosition(position);
             }
             
             if (parent != null)
@@ -56,10 +81,11 @@ namespace GameFramework
         /// 사용한 Object를 다시 반환합니다.
         /// </summary>
         /// <param name="obj"></param>
-        public void Release(T obj)
+        public void Release(GameObject obj)
         {
             _objects.Enqueue(obj);
             obj.gameObject.transform.position = Vector3.zero;
+            obj.gameObject.transform.parent = gameObject.transform;
             obj.gameObject.SetActive(false);
         }
 
@@ -67,7 +93,9 @@ namespace GameFramework
         {
             for (int i = 0; i < size; i++)
             {
-                _objects.Enqueue(Instantiate(createPrefab));
+                var obj = Instantiate(createPrefab, gameObject.transform);
+                _objects.Enqueue(obj);
+                obj.SetActive(false);
             }
         }
     }
