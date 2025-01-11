@@ -10,11 +10,11 @@
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:dc47925d1a5fa2946bdd37746b2b5d48",
         "GUID:593a5b492d29ac6448b1ebf7f035ef33",
-        "GUID:8161667de84644ec1b7c7b2a6d8e757d",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:7988c03078378034c94c47b8f742023d",
         "GUID:d88a0377d4cbded43be820fd05c3683f",
-        "GUID:cdc49550b61b2c141809f0f92a90a4b3"
+        "GUID:cdc49550b61b2c141809f0f92a90a4b3",
+        "GUID:8161667de84644ec1b7c7b2a6d8e757d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -38,6 +38,11 @@
             "name": "com.achieve.quick-save",
             "expression": "0.0.1",
             "define": "USE_QUICK_SAVE"
+        },
+        {
+            "name": "jp.hadashikick.unitaskpubsub",
+            "expression": "0.0.1",
+            "define": "USE_PUBSUB"
         }
     ],
     "noEngineReferences": false

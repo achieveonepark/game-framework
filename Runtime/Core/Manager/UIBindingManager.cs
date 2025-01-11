@@ -1,8 +1,12 @@
+#if USE_PUBSUB
+
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+
 using UniTaskPubSub;
+
 
 namespace GameFramework
 {
@@ -104,3 +108,5 @@ namespace GameFramework
         }
     }
 }
+
+#endif

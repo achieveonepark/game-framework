@@ -13,7 +13,9 @@ namespace GameFramework
             await TimeManager.Initialize();
             ConfigManager.Initialize();
             LiteDB.Initialize(settings.DBPath);
+#if USE_PUBSUB
             UIBindingManager.Initialize();
+#endif
         }
     }
 }
