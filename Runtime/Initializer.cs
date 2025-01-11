@@ -1,4 +1,4 @@
-using Achieve.Database;
+// using Achieve.Database;
 using Cysharp.Threading.Tasks;
 
 namespace GameFramework
@@ -12,7 +12,7 @@ namespace GameFramework
             GameLog.Initialize();
             await TimeManager.Initialize();
             ConfigManager.Initialize();
-            LiteDB.Initialize(settings.DBPath);
+            // LiteDB.Initialize(settings.DBPath);
 #if USE_PUBSUB
             UIBindingManager.Initialize();
 #endif
