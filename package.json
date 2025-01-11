@@ -13,10 +13,6 @@
   },
   "documentationUrl": "https://github.com/achieveonepark/game-framework",
   "changelogUrl": "https://github.com/achieveonepark/game-framework/blob/main/CHANGELOG.md",
-  "repository": {
-    "url": "https://github.com/achieveonepark/QuickSave",
-    "type": "git"
-  },
   "_upm": {
     "changelog": "## Added\n- Package release"
   }

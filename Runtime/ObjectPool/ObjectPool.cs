@@ -1,19 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GameFramework
 {
     public class ObjectPool : MonoBehaviour
     {
-        [SerializeField] private GameObject createPrefab;
-        [SerializeField] private int _initializeSize;
+        public GameObject CreatePrefab;
+        public int InitializeSize;
         [SerializeField] private int _addSize;
         
-        private Queue<GameObject> _objects = new Queue<GameObject>();
+        private readonly Queue<GameObject> _objects = new Queue<GameObject>();
         
-        public void Initialize()
+        public void Initialize(GameObject createPrefab = null)
         {
-            AddSize(_initializeSize);
+            if (createPrefab != null)
+            {
+                CreatePrefab = createPrefab;
+            }
+            
+            AddSize(InitializeSize);
         }
         
         public GameObject Get() => GetInternal(Vector2.zero, null);
@@ -89,11 +95,11 @@ namespace GameFramework
             obj.gameObject.SetActive(false);
         }
 
-        private void AddSize(int size)
+        public void AddSize(int size)
         {
             for (int i = 0; i < size; i++)
             {
-                var obj = Instantiate(createPrefab, gameObject.transform);
+                var obj = Instantiate(CreatePrefab, gameObject.transform);
                 _objects.Enqueue(obj);
                 obj.SetActive(false);
             }
