@@ -13,7 +13,8 @@
         "GUID:8161667de84644ec1b7c7b2a6d8e757d",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:7988c03078378034c94c47b8f742023d",
-        "GUID:d88a0377d4cbded43be820fd05c3683f"
+        "GUID:d88a0377d4cbded43be820fd05c3683f",
+        "GUID:cdc49550b61b2c141809f0f92a90a4b3"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -32,6 +33,11 @@
             "name": "com.unity.addressables",
             "expression": "0.0.1",
             "define": "USE_ADDRESSABLE"
+        },
+        {
+            "name": "com.achieve.quick-save",
+            "expression": "0.0.1",
+            "define": "USE_QUICK_SAVE"
         }
     ],
     "noEngineReferences": false
