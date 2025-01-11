@@ -7,19 +7,18 @@ namespace GameFramework
     public class ObjectPool : MonoBehaviour
     {
         public GameObject CreatePrefab;
-        public int InitializeSize;
         [SerializeField] private int _addSize;
         
         private readonly Queue<GameObject> _objects = new Queue<GameObject>();
         
-        public void Initialize(GameObject createPrefab = null)
+        public void Initialize(int initializeCount, GameObject createPrefab = null)
         {
             if (createPrefab != null)
             {
                 CreatePrefab = createPrefab;
             }
             
-            AddSize(InitializeSize);
+            AddSize(initializeCount);
         }
         
         public GameObject Get() => GetInternal(Vector2.zero, null);
@@ -100,6 +99,7 @@ namespace GameFramework
             for (int i = 0; i < size; i++)
             {
                 var obj = Instantiate(CreatePrefab, gameObject.transform);
+                obj.name = obj.name.Replace("(Clone)", "");
                 _objects.Enqueue(obj);
                 obj.SetActive(false);
             }
