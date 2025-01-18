@@ -18,22 +18,25 @@ namespace GameFramework.Data.Player
     public partial class Player
     {
         private static Player _instance; 
+        private static Player getInstance => _instance ??= new Player();
         
         private readonly Dictionary<string, PlayerInfosBase> _dataStorage = new ();
 
         public static void AddInfos<T>(T data) where T : PlayerInfosBase
         {
             var key = data.DataKey;
-            if (!_instance._dataStorage.TryAdd(key, data))
+            if (getInstance._dataStorage.TryGetValue(key, out var playerInfos))
             {
                 throw new InvalidOperationException($"Data of type {key} already exists.");
             }
+            
+            getInstance._dataStorage.Add(key, data);
         }
 
         public static T GetInfos<T>() where T : PlayerInfosBase
         {
             var key = typeof(T).Name;
-            if (_instance._dataStorage.TryGetValue(key, out var data))
+            if (getInstance._dataStorage.TryGetValue(key, out var data))
             {
                 return data as T;
             }
@@ -44,7 +47,7 @@ namespace GameFramework.Data.Player
         public static void RemoveInfos<T>() where T : PlayerInfosBase
         {
             var key = typeof(T).Name;
-            if (!_instance._dataStorage.Remove(key))
+            if (!getInstance._dataStorage.Remove(key))
             {
                 throw new KeyNotFoundException($"Data of type {key} not found for removal.");
             }
@@ -55,12 +58,12 @@ namespace GameFramework.Data.Player
         
         public static void Save()
         {
-            _instance.SaveInternal();
+            getInstance.SaveInternal();
         }
 
         public static void Load()
         {
-            _instance.LoadInternal();
+            getInstance.LoadInternal();
         }
 
         private void SaveInternal()
