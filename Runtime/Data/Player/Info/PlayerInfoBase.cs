@@ -5,6 +5,6 @@ namespace GameFramework.Data.Player
     /// </summary>
     public class PlayerInfoBase
     {
-        
+        public int Id;
     }
 }
