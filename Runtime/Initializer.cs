@@ -1,4 +1,3 @@
-// using Achieve.Database;
 using Cysharp.Threading.Tasks;
 
 namespace GameFramework
@@ -9,13 +8,23 @@ namespace GameFramework
         {
             var settings = InitializeSettings.GetOrAdd<InitializeSettings>();
             
-            GameLog.Initialize();
-            await TimeManager.Initialize();
-            ConfigManager.Initialize();
-            // LiteDB.Initialize(settings.DBPath);
+            if(settings == null)
+            {
+                return;        
+            }
+
+            if (settings.IsGameLogEnabled) GameLog.Initialize();
+            if (settings.IsTimeManagerEnabled) await TimeManager.Initialize();
+            if (settings.IsConfigManagerEnabled) ConfigManager.Initialize();
 #if USE_PUBSUB
-            UIBindingManager.Initialize();
+            if (settings.IsUIBindManagerEnabled) UIBindingManager.Initialize();
 #endif
         }
     }
 }
+
+/*
+ETC Initialize
+LiteDB.Initialize(Path)
+
+*/

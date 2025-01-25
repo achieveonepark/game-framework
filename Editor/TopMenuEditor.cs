@@ -11,7 +11,5 @@ namespace Editor
             var asset = InitializeSettings.Add<InitializeSettings>();
             InitializeSettings.PingAsset<InitializeSettings>();
         }
-        
-        
     }
 }
