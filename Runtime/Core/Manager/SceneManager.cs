@@ -32,15 +32,14 @@ namespace GameFramework
             OnSceneLoadCompleted?.Invoke();
             var scene = UnitySceneManager.GetActiveScene();
             var roots = scene.GetRootGameObjects();
-            foreach (var t in roots)
+            
+            foreach (var root in roots)
             {
-                if (t.GetComponent<Scene>() is not Scene sceneComponent)
+                if (root.TryGetComponent<IScene>(out var sceneComponent))
                 {
-                    continue;
+                    Current = sceneComponent;
+                    break;
                 }
-                
-                Current = sceneComponent;
-                break;
             }
 
             if (Current == null)
