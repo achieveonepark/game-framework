@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
     
 namespace GameFramework
@@ -28,7 +29,8 @@ namespace GameFramework
             }
 
             OnSceneLoadStarted?.Invoke();
-            await UnitySceneManager.LoadSceneAsync(sceneName);
+            await UnitySceneManager.LoadSceneAsync(sceneName).ToUniTask();
+            
             OnSceneLoadCompleted?.Invoke();
             var scene = UnitySceneManager.GetActiveScene();
             var roots = scene.GetRootGameObjects();
