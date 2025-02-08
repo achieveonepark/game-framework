@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Unity.Serialization.Json;
 using UnityEngine;
 
@@ -9,7 +8,6 @@ namespace GameFramework
     {
         public static void SaveDictionary<TKey, TValue>(string key, Dictionary<TKey, TValue> dictionary)
         {
-            
             string json = JsonSerialization.ToJson(dictionary);
             PlayerPrefs.SetString(key, json);
             PlayerPrefs.Save();
