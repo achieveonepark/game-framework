@@ -9,6 +9,7 @@
     "Framework"
   ],
   "dependencies": {
+    "com.unity.serialization": "3.1.2",
     "com.unity.test-framework": "1.0.16"
   },
   "documentationUrl": "https://github.com/achieveonepark/game-framework",
