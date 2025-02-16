@@ -2,8 +2,9 @@
 
 ## Install
 
-### To use this package, [UniTask](https://github.com/cysharp/unitask) installation is required.
 
+### [UniTask](https://github.com/cysharp/unitask) must be installed before installing this package.
+> Before installing the packages below, the installation steps in each repository's documentation must be completed first.
 - Installing [UniTaskPubSub](https://github.com/hadashiA/UniTaskPubSub) allows for easier UI management, streamlining your workflow with an async/await-based messaging system.
 - Installing [QuickSave](https://github.com/achieveonepark/quicksave) provides a simplified and efficient data saving system, making it easier to manage persistent data.
 
