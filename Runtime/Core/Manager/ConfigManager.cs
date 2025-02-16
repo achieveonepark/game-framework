@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GameFramework
 {
+    /// <summary>
+    /// 옵션에 사용 될 데이터들을 가볍게 PlayerPref에 적재합니다.
+    /// </summary>
     public static class ConfigManager
     {
         private static readonly string dicKey = $"{Application.identifier}.configs.gameframework";
@@ -47,7 +50,7 @@ namespace GameFramework
             
             _configs[key] = value;
             
-            DictionaryPrefs.SaveDictionary<string, object>(dicKey, _configs);
+            DictionaryPrefs.SaveDictionary(dicKey, _configs);
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using GameFramework;
+using Unity.Serialization.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -33,20 +34,10 @@ public static class TimeManager
     
     private static async UniTask GetNetworkTimeAsync()
     {
-        HttpLink request = new HttpLink.Builder()
+        var response = await new HttpLink.Builder()
             .SetUrl(TimeApiUrl)
-            .SetMethod(UnityWebRequest.kHttpVerbGET)
-            .Build();
-
-        await request.SendAsync();
-
-        if (request.Success is false)
-        {
-            time = DateTime.Now;
-            return;
-        }
-
-        NTPResponse response = JsonUtility.FromJson<NTPResponse>(request.ReceiveDataString);
+            .GetAsync<NTPResponse>();
+       
         time = DateTime.Parse(response.dateTime);
     }
 

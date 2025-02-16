@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Cysharp.Threading.Tasks;
+using Unity.Serialization.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,13 +9,15 @@ namespace GameFramework
 {
     public class HttpLink
     {
-        public HttpLink(UnityWebRequest request)
+        private HttpLink(UnityWebRequest request)
         {
             this._request = request;
         }
         
         private UnityWebRequest _request;
-        public bool Success => _request.result == UnityWebRequest.Result.Success;
+
+        public UnityWebRequest.Result Result => _request.result;
+        public bool Success => Result == UnityWebRequest.Result.Success;
         public byte[] ReceiveData => _request.downloadHandler.data;
         public string ReceiveDataString => _request.downloadHandler.text;
         public ulong DownloadSize => _request.downloadedBytes;
@@ -48,6 +51,34 @@ namespace GameFramework
                 return this;
             }
 
+            public async UniTask<T> GetAsync<T>()
+            {
+                this.method = UnityWebRequest.kHttpVerbGET;
+
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw GameLog.Fatal(new InvalidUrlException());
+                }
+                
+                var httpLink = Build();
+                var request = await httpLink.SendAsync();
+                return request.Success is false ? default : JsonSerialization.FromJson<T>(request.ReceiveDataString);
+            }
+
+            public async UniTask<bool> PostAsync()
+            {
+                this.method = UnityWebRequest.kHttpVerbPOST;
+                
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw GameLog.Fatal(new InvalidUrlException());
+                }
+                
+                var httpLink = Build();
+                var request = await httpLink.SendAsync();
+                return request.Success;
+            }
+
             // HTTP 메서드 설정 (Get, Post 등)
             public Builder SetMethod(string method)
             {
@@ -79,6 +110,11 @@ namespace GameFramework
             // 요청 보내기 (async/await 패턴 사용)
             public HttpLink Build()
             {
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw GameLog.Fatal(new InvalidUrlException());
+                }
+                
                 UnityWebRequest request;
 
                 // HTTP 메서드에 따른 요청 생성

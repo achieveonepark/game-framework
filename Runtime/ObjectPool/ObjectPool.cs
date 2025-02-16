@@ -9,7 +9,7 @@ namespace GameFramework
         public GameObject CreatePrefab;
         [SerializeField] private int _addSize;
         
-        private readonly Queue<GameObject> _objects = new Queue<GameObject>();
+        private readonly Queue<GameObject> _objects = new ();
         
         public void Initialize(int initializeCount, GameObject createPrefab = null)
         {

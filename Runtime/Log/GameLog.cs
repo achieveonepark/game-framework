@@ -16,7 +16,7 @@ namespace GameFramework
         public static void Info(string message) => Log(LogLevel.Info, message);
         public static void Warning(string message) => Log(LogLevel.Warning, message);
         public static void Error(string message) => Log(LogLevel.Error, message);
-        public static Exception Fatal(string message) => throw Log(LogLevel.Fatal, message);
+        public static Exception Fatal(Exception exception) => throw Log(LogLevel.Fatal, exception.Message);
 
         public static Exception Log(LogLevel level, string message)
         {
