@@ -20,12 +20,12 @@ namespace GameFramework
         
         public static void AddKey(string key, object value)
         {
-            if (!_configs.ContainsKey(key))
+            if (_configs.ContainsKey(key))
             {
                 Debug.Log($"Already key. key: {key}");
                 return;
-            }   
-            
+            }
+
             _configs.Add(key, value);
         }
 
