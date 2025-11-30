@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using MemoryPack;
 #endif
 
-namespace GameFramework.Data.Player
+namespace GameFramework
 {
     /// <summary>
     /// PlayerData를 담당하는 클래스입니다.<br>
@@ -20,9 +20,9 @@ namespace GameFramework.Data.Player
         private static Player _instance; 
         private static Player getInstance => _instance ??= new Player();
         
-        private readonly Dictionary<string, PlayerInfosBase> _dataStorage = new ();
+        private readonly Dictionary<string, PlayerDataContainerBase> _dataStorage = new ();
 
-        public static void AddInfos<T>(T data) where T : PlayerInfosBase
+        public static void AddInfos<T>(T data) where T : PlayerDataContainerBase
         {
             var key = data.DataKey;
             if (getInstance._dataStorage.TryGetValue(key, out var playerInfos))
@@ -33,7 +33,7 @@ namespace GameFramework.Data.Player
             getInstance._dataStorage.Add(key, data);
         }
 
-        public static T GetInfos<T>() where T : PlayerInfosBase
+        public static T GetInfos<T>() where T : PlayerDataContainerBase
         {
             var key = typeof(T).Name;
             if (getInstance._dataStorage.TryGetValue(key, out var data))
@@ -44,7 +44,7 @@ namespace GameFramework.Data.Player
             throw new KeyNotFoundException($"Data of type {key} not found.");
         }
 
-        public static void RemoveInfos<T>() where T : PlayerInfosBase
+        public static void RemoveInfos<T>() where T : PlayerDataContainerBase
         {
             var key = typeof(T).Name;
             if (!getInstance._dataStorage.Remove(key))

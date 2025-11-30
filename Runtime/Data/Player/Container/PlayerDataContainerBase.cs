@@ -1,9 +1,9 @@
-namespace GameFramework.Data.Player
+namespace GameFramework
 {
     /// <summary>
     /// 
     /// </summary>
-    public class PlayerInfosBase
+    public class PlayerDataContainerBase
     {
         public string DataKey { get; protected set; }
     }

@@ -1,9 +1,9 @@
-namespace GameFramework.Data.Player
+namespace GameFramework
 {
     /// <summary>
     /// 
     /// </summary>
-    public class PlayerInfoBase
+    public class PlayerDataBase
     {
         public int Id;
     }

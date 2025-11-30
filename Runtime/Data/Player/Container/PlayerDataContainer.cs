@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using MemoryPack;
 #endif
 
-namespace GameFramework.Data.Player
+namespace GameFramework
 {
     /// <summary>
     /// 인게임에 실사용되는 데이터를 담는 클래스입니다.<br>
@@ -16,8 +16,10 @@ namespace GameFramework.Data.Player
     #if USE_QUICK_SAVE
     [MemoryPackable]
     #endif
-    public class InfosContainer<TKey, TValue> : PlayerInfosBase
+    public class PlayerDataContainer<TKey, TValue>
     {
+        public string DataKey { get; protected set; }
+        
         protected Dictionary<TKey, TValue> _dataDic;
 
         public void Add(TKey key, TValue value)
