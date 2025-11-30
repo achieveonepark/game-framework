@@ -16,7 +16,7 @@ namespace GameFramework
             public static event Action OnSceneLoadStarted;
             public static event Action OnSceneLoadCompleted;
 
-            public static async UniTask LoadScene(string sceneName)
+            public static async UniTask LoadSceneAsync(string sceneName)
             {
                 if (_isLoading)
                 {
@@ -59,7 +59,7 @@ namespace GameFramework
                 await Current.OnSceneStart();
             }
 
-            public static async UniTask ReloadScene()
+            public static async UniTask ReloadSceneAsync()
             {
                 if (Current == null)
                 {
@@ -67,10 +67,10 @@ namespace GameFramework
                 }
 
                 string currentSceneName = CurrentSceneName;
-                await LoadScene(currentSceneName);
+                await LoadSceneAsync(currentSceneName);
             }
 
-            public static async UniTask UnloadScene(string sceneName)
+            public static async UniTask UnloadSceneAsync(string sceneName)
             {
                 if (_isLoading || Current == null)
                 {
