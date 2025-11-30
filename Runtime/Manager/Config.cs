@@ -6,7 +6,7 @@ namespace GameFramework
     public static partial class Core
     {
         /// <summary>
-        /// 옵션에 사용 될 데이터들을 가볍게 PlayerPref에 적재합니다.
+        /// 옵션에 사용 될 데이터, PlayerPrefs로 저장 됨
         /// </summary>
         public static class Config
         {
