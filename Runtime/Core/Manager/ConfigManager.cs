@@ -12,7 +12,8 @@ namespace GameFramework
         
         private static Dictionary<string, object> _configs;
 
-        internal static void Initialize()
+        [RuntimeInitializeOnLoadMethod]
+        static void Initialize()
         {
             _configs = DictionaryPrefs.LoadDictionary<string, object>(dicKey);
             GameLog.Debug("[ConfigManager] Initialized");

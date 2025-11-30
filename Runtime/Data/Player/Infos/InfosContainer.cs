@@ -16,7 +16,7 @@ namespace GameFramework.Data.Player
     #if USE_QUICK_SAVE
     [MemoryPackable]
     #endif
-    public partial class InfosContainer<TKey, TValue> : PlayerInfosBase
+    public class InfosContainer<TKey, TValue> : PlayerInfosBase
     {
         protected Dictionary<TKey, TValue> _dataDic;
 

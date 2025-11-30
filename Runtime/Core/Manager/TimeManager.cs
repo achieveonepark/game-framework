@@ -1,13 +1,19 @@
 using System;
 using Cysharp.Threading.Tasks;
 using GameFramework;
-using Unity.Serialization.Json;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public static class TimeManager
 {
+    [RuntimeInitializeOnLoadMethod]
+    private static async void Initialize()
+    {
+        await GetNetworkTimeAsync();
+        _startTimer = Time.unscaledTime;
+        OnCheck_1Sec().Forget();
+        GameLog.Debug("[TimeManager] Initialized");
+    }
+    
     private const string TimeApiUrl = "https://timeapi.io/api/Time/current/zone?timeZone=UTC";
     
     public static float TimeScale
@@ -23,14 +29,6 @@ public static class TimeManager
     public static DateTime Now => time.AddSeconds(_timer - _startTimer);
     
     public static event Action OnEvent1Sec;
-
-    public static async UniTask Initialize()
-    {
-        await GetNetworkTimeAsync();
-        _startTimer = Time.unscaledTime;
-        OnCheck_1Sec().Forget();
-        GameLog.Debug("[TimeManager] Initialized");
-    }
     
     private static async UniTask GetNetworkTimeAsync()
     {
