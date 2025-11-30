@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameFramework
 {
-    public class Popup : BaseUI
+    public class PopupBase : BaseUI
     {
         public bool Active => gameObject.activeSelf;
 
@@ -45,19 +45,19 @@ namespace GameFramework
             gameObject.SetActive(false);
         }
 
-        public Popup SetPosition(Vector2 position)
+        public PopupBase SetPosition(Vector2 position)
         {
             transform.position = position;
             return this;
         }
 
-        public Popup SetParent(Transform transform)
+        public PopupBase SetParent(Transform transform)
         {
             transform.parent = transform;
             return this;
         }
 
-        public Popup SetName(string name)
+        public PopupBase SetName(string name)
         {
             gameObject.name = name;
             return this;
