@@ -52,7 +52,7 @@ namespace GameFramework
             var newPos = _mainCamera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, _mainCamera.nearClipPlane));
             newPos.z = 0;
             transform.position = newPos;
-            OnTouching(newPos);
+            OnTouching?.Invoke(newPos);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -61,13 +61,17 @@ namespace GameFramework
             {
                 _isDragging = true;
                 originalPos = transform.position;
+
+                OnTouchDown?.Invoke();
             }
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             _isDragging = false;
-            OnTouchUp(Physics2D.OverlapCircleAll(transform.position, 0.5f));
+            
+            transform.position = originalPos;
+            OnTouchUp?.Invoke(Physics2D.OverlapCircleAll(transform.position, 0.5f));
         }
     }
 }
