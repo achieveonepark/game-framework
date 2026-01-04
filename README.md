@@ -1,134 +1,137 @@
 # Game Framework
 
-## Install
+A collection of pre-built systems and extensions designed to accelerate game development in Unity.
 
+This framework is organized under a central static class `GameFramework.Core`, which contains various managers and systems.
 
-### [UniTask](https://github.com/cysharp/unitask) must be installed before installing this package.
-> Before installing the packages below, the installation steps in each repository's documentation must be completed first.
-- Installing [UniTaskPubSub](https://github.com/hadashiA/UniTaskPubSub) allows for easier UI management, streamlining your workflow with an async/await-based messaging system.
-- Installing [QuickSave](https://github.com/achieveonepark/quicksave) provides a simplified and efficient data saving system, making it easier to manage persistent data.
+## UPM Installation
 
-## Description
-I’ve added classes and plugins to streamline development in Unity.
+1.  Open the Unity Package Manager (`Window > Package Manager`).
+2.  Click the `+` icon and select `Add package from git URL...`.
+3.  Enter the following URL: `https://github.com/achieveonepark/game-framework.git`
 
-### Included Features:
+## Dependencies
 
-1. [Config](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#config)
-2. [Popup / Scene Base Classes](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#popup)
-3. [Time Management](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#time-management)
-4. [UIBinding using UniTaskPubSub](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#uibinding-using-unitaskpubsub)
-5. [Singleton Pattern](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#singleton)
-6. [Logging](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#logging)
-7. [User-Friendly UnityWebRequest Wrapper](https://github.com/achieveonepark/GameFramework?tab=readme-ov-file#user-friendly-unitywebrequest-wrapper)
+This framework relies on some external packages for full functionality.
 
+### Required
+-   **[UniTask](https://github.com/Cysharp/UniTask):** Required for asynchronous operations throughout the framework. Please install this **before** installing the Game Framework package.
 
-### Recommended Assets to Use Together:
-1. [Infinity Value](https://github.com/achieveonepark/infinityValue): Struct for infinite numbers with thousand-unit grouping
-2. [Smart Addressables](https://github.com/achieveonepark/SmartAddressables): Enhance the convenience and efficiency of using Unity's Addressables.
-3. [Lite DB](https://github.com/achieveonepark/LiteDB): Efficiently manages data using SQLite.
+### Optional
+These packages can be installed to enable additional features.
 
-## Quick Start
+-   **[UniTaskPubSub](https://github.com/hadashiA/UniTaskPubSub):** Enables the `UIBindingManager` for a reactive, event-based UI.
+-   **[QuickSave](https://github.com/achieveonepark/quicksave):** Enables the data persistence feature in `Core.Player`. To use it, you must also add `USE_QUICK_SAVE` to your project's Scripting Define Symbols.
 
-### Config
-All data added to the `ConfigManager` is saved in `PlayerPrefs`.
+## Features & API
 
+Most framework modules are available as nested classes within the static `GameFramework.Core` class.
+
+### Access Patterns
+-   **Static Classes**: Accessed directly (e.g., `Core.Time.TimeScale`).
+-   **MonoBehaviour Singletons**: Accessed via an `Instance` property (e.g., `Core.Sound.Instance.PlayBGM()`). These require a corresponding GameObject in the scene.
+
+### System Modules
+| Class | Access Pattern | Description |
+| :--- | :--- | :--- |
+| `Core.Log` | Static | Handles console logging with various levels. |
+| `Core.Config` | Static | Manages key-value configuration saved to PlayerPrefs. |
+| `Core.Player` | Static | Centralized manager for runtime player data via "Containers". |
+| `Core.Time` | Static | Controls global time scale and provides current time. |
+| `Core.Input` | Static | A wrapper for `UnityEngine.Input` with an on/off switch. |
+| `Core.Pool` | Static | Generic object pooling for prefabs using `UnityEngine.Pool`. |
+| `Core.IAP` | Static | Simple hooks for processing in-app purchases. |
+| `Core.Sound` | Singleton | Manages BGM and SFX playback. |
+| `Core.Scene` | Singleton | Manages scene loading and unloading. |
+| `Core.Popup` | Singleton | Manages instantiation and lifecycle of UI popups. |
+
+### Other Features
+-   **Utility & Extension Methods**: A large collection of extension methods for built-in Unity and C# types. See the `Runtime/Extensions` folder.
+-   **UI Components**: Helper components like `SafeArea` and `Draggable`.
+
+## Quick Start Examples
+
+### `Core.Log`
+Handles categorized console logging.
 ```csharp
-ConfigManager.AddKey("Sound", 0);
-ConfigManager.AddKey("BGM", 0);
-ConfigManager.AddKey("DataKey", "DataValue");
-
-var sound = ConfigManager.GetConfig("Sound");
-ConfigManager.SetConfig("Sound", 100);
+Core.Log.Debug("This is a debug message.");
+Core.Log.Info("This is for important information.");
+Core.Log.Warning("Something might be wrong.");
 ```
 
-### Popup
-Editor Setup:
-
-1. Add a `PopupManager` to the Hierarchy. (It will run with DontDestroyOnLoad enabled.)
-2. Cache your `popups` in the Popups field of the `PopupManager`.
-
+### `Core.Config`
+Manages simple data saved to `PlayerPrefs`.
 ```csharp
-public class SettingPopup : Popup
+// Set an initial value if the key doesn't exist
+Core.Config.AddKey("BGMVolume", 0.8f);
+
+// Get and set values
+Core.Config.SetConfig("BGMVolume", 0.7f);
+float currentVolume = (float)Core.Config.GetConfig("BGMVolume");
+```
+
+### `Core.Player` (Data Management)
+Manages runtime data via container classes.
+
+**1. Define your data and container.**
+```csharp
+// The raw data structure
+public class CharacterData : PlayerDataBase
 {
-    // ...
+    public string Name;
+    public int Level;
 }
-public class CommonPopup : Popup
+
+// The container that holds the data
+public class CharacterDataContainer : PlayerDataContainerBase<int, CharacterData>
 {
-    // ...
+    public CharacterDataContainer()
+    {
+        // IMPORTANT: DataKey MUST match the class name for GetContainer<T> to work!
+        DataKey = typeof(CharacterDataContainer).Name;
+    }
 }
-public class SettingData
-{
-    public int Volume;
-    // ...
-}
-
-// Calling GetPopup will also trigger the popup's Open method.
-var commonPopup = PopupManager.GetPopup<CommonPopup>();
-
-// objName : Txt_Level, TMP Support
-var lvTxt = commonPopup.Get<Text>("Level");
-var lvTxt = commonPopup.Get<TMP_Text>("Level"); 
-
-SettingData data = new SettingData { Volume = 200 };
-var settingPopup = PopupManager.GetPopup<SettingPopup>(data);
 ```
 
-### Time Management
-`TimeManager` only returns the current time.
-
+**2. Register and use the container.**
 ```csharp
-DateTime now = TimeManager.Now;
-TimeManager.TimeScale = 2;
+// At game start, create and register the container
+var characterContainer = new CharacterDataContainer();
+characterContainer.Add(1, new CharacterData { Id = 1, Name = "Hero", Level = 1 });
+Core.Player.AddContainer(characterContainer);
+
+// Elsewhere, retrieve and use the data
+var myChars = Core.Player.GetContainer<CharacterDataContainer>();
+var mainChar = myChars.GetInfo(1);
+mainChar.Level++;
+
+// To save/load all data (requires USE_QUICK_SAVE define)
+Core.Player.Save();
+Core.Player.Load();
 ```
 
-### UIBinding using UniTaskPubSub
 
-We used the [hadashiA/UniTaskPubSub](https://github.com/hadashiA/UniTaskPubSub) repository. For more details, check out the link.<br> This setup simplifies event management.
-
+### `Core.Popup` (Singleton)
+Requires a `PopupManager` GameObject with the `Core.Popup` script and a list of popup prefabs.
 ```csharp
-// Register
-UIBindingManager.Subscribe<SettingData>(data =>
-{
-    SetVolume(data.Volume);
-});
+// Open a popup of a specific type from the manager's list
+// The popup's Open() method is called automatically
+var myPopup = Core.Popup.Instance.Open<MyAwesomePopup>();
 
-// Call
-UIBindingManager.Publish(new SettingData { Volume = 5 });
+// Pass data to the popup when opening
+var data = new MyPopupData { Message = "Hello!" };
+Core.Popup.Instance.Open<MyAwesomePopup>(data);
+
+// Close the popup
+myPopup.Close();
 ```
 
-### Singleton
-
-Access and use each singleton via `Class.Instance`, just like any other singleton pattern.
-
-- **MonoSingleton**: A singleton that inherits from MonoBehaviour.
-- **PersistentMonoSingleton**: Like MonoSingleton but uses `DontDestroyOnLoad` to persist between scenes.
-- **Singleton**: An object used as a singleton without MonoBehaviour.
-
-### Logging
-
-The package includes a basic `Log` class.<br> If you need customization, you can implement a custom logger by inheriting from `IGameLog`.<br> For reference, see `GameLog.cs` in the package.
-
+### `Core.Time`
+A wrapper for Unity's Time and `DateTime`.
 ```csharp
-GameLog.Debug("Debug");
-GameLog.Info("Info");
-GameLog.Warning("Warning");
-GameLog.Error("Error");
-throw GameLog.Fatal("Fatal");
-```
+// Set the game speed to 2x
+Core.Time.TimeScale = 2.0f;
 
-### User-Friendly UnityWebRequest Wrapper
-
-This class is designed to wrap UnityWebRequest for a cleaner and more user-friendly experience.
-
-```csharp
-var result = new HttpLink.Builder()
-    .SetUrl("https://jsonplaceholder.typicode.com/posts/1")
-    .SetMethod("GET")
-    .Build();
-await result.SendAsync();
-if (result.Success)
-{
-    var resultBytes = result.ReceiveData;
-    var resultStr = result.ReceiveDataString;
-}
+// Get the current real-world time
+DateTime now = Core.Time.Now;
 ```
