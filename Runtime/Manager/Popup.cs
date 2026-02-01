@@ -1,80 +1,88 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using GameFramework.Manager;
 using UnityEngine;
 
 namespace GameFramework
 {
-    public static partial class Core
+    public class PopupManager : PersistentMonoSingleton<PopupManager>, IManager
     {
-        public class Popup : PersistentMonoSingleton<Popup>
+        private List<PopupBase> _instantiatedPopup = new List<PopupBase>();
+        [SerializeField] List<PopupBase> _popups = new List<PopupBase>(); // Assuming TryGetValueForType is an extension for List<PopupBase>
+
+        public UniTask Initialize()
         {
-            private List<PopupBase> _instantiatedPopup = new List<PopupBase>();
-            [SerializeField] List<PopupBase> _popups = new List<PopupBase>();
+            // The PersistentMonoSingleton's Awake handles its own initialization.
+            // We can add specific manager setup here if needed.
+            Debug.Log("[PopupManager] Initialized");
+            return UniTask.CompletedTask;
+        }
 
-            public static T GetPopup<T>(bool isRefresh = false) where T : PopupBase
+        public T GetPopup<T>(bool isRefresh = false) where T : PopupBase
+        {
+            Type popupType = typeof(T);
+
+            // Assuming TryGetValueForType is an extension method somewhere
+            if (this._popups.TryGetValueForType(popupType, out var popup) is false)
             {
-                Type popupType = typeof(T);
+                Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
+                return null;
+            }
 
-                if (Instance._popups.TryGetValueForType(popupType, out var popup) is false)
-                {
-                    Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
-                    return null;
-                }
+            var result = (T)popup;
 
-                var result = (T)popup;
-
-                if (result.Active && isRefresh is false)
-                {
-                    return result;
-                }
-
-                if (IsInstantiated(result) is false)
-                {
-                    var instantiatedPopup = Instantiate(result, Instance.transform);
-                    Instance._instantiatedPopup.Add(instantiatedPopup);
-
-                    (isRefresh ? (Action)instantiatedPopup.Refresh : instantiatedPopup.Open)();
-                    return instantiatedPopup;
-                }
-
-                (isRefresh ? (Action)result.Refresh : result.Open)();
+            if (result.Active && isRefresh is false)
+            {
                 return result;
             }
 
-            public static T GetPopup<T>(object data, bool isRefresh = false) where T : PopupBase
+            if (IsInstantiated(result) is false)
             {
-                Type popupType = typeof(T);
+                var instantiatedPopup = Instantiate(result, this.transform);
+                this._instantiatedPopup.Add(instantiatedPopup);
 
-                if (Instance._popups.TryGetValueForType(popupType, out var popup) is false)
-                {
-                    Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
-                    return null;
-                }
+                (isRefresh ? (Action)instantiatedPopup.Refresh : instantiatedPopup.Open)();
+                return instantiatedPopup;
+            }
 
-                var result = (T)popup;
+            (isRefresh ? (Action)result.Refresh : result.Open)();
+            return result;
+        }
 
-                if (result.Active && isRefresh is false)
-                {
-                    return result;
-                }
+        public T GetPopup<T>(object data, bool isRefresh = false) where T : PopupBase
+        {
+            Type popupType = typeof(T);
 
-                if (IsInstantiated(result) is false)
-                {
-                    var instantiatedPopup = Instantiate(result, Instance.transform);
-                    Instance._instantiatedPopup.Add(instantiatedPopup);
+            if (this._popups.TryGetValueForType(popupType, out var popup) is false)
+            {
+                Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
+                return null;
+            }
 
-                    (isRefresh ? (Action<object>)instantiatedPopup.Refresh : instantiatedPopup.Open)(data);
-                    return instantiatedPopup;
-                }
+            var result = (T)popup;
 
-                (isRefresh ? (Action<object>)result.Refresh : result.Open)(data);
+            if (result.Active && isRefresh is false)
+            {
                 return result;
             }
 
-            private static bool IsInstantiated(PopupBase popupBase)
+            if (IsInstantiated(result) is false)
             {
-                return Instance._instantiatedPopup.Contains(popupBase);
+                var instantiatedPopup = Instantiate(result, this.transform);
+                this._instantiatedPopup.Add(instantiatedPopup);
+
+                (isRefresh ? (Action<object>)instantiatedPopup.Refresh : instantiatedPopup.Open)(data);
+                return instantiatedPopup;
             }
+
+            (isRefresh ? (Action<object>)result.Refresh : result.Open)(data);
+            return result;
+        }
+
+        private bool IsInstantiated(PopupBase popupBase)
+        {
+            return this._instantiatedPopup.Contains(popupBase);
         }
     }
 }

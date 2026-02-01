@@ -1,25 +1,26 @@
 using Cysharp.Threading.Tasks;
+using GameFramework.Manager;
 
 namespace GameFramework
 {
-    public static partial class Core
+    public class IAPManager : IManager
     {
-        public class IAP
+        public UniTask Initialize()
         {
-            public static UniTask Initialize()
-            {
-                return UniTask.CompletedTask;
-            }
-            
-            public static UniTask PurchaseAsync()
-            {
-                return UniTask.CompletedTask;
-            }
+            // TODO: Add actual initialization logic
+            return UniTask.CompletedTask;
+        }
 
-            public static UniTask GetPendingListAsync()
-            {
-                return UniTask.CompletedTask;
-            }
+        public UniTask PurchaseAsync()
+        {
+            // TODO: Add actual purchase logic
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask GetPendingListAsync()
+        {
+            // TODO: Add actual pending list logic
+            return UniTask.CompletedTask;
         }
     }
 }

@@ -1,10 +1,13 @@
+using Cysharp.Threading.Tasks;
+using GameFramework.Manager;
+
 namespace GameFramework
 {
-    public static partial class Core
+    public class SoundManager : IManager
     {
-        public class Sound
+        public UniTask Initialize()
         {
-            
+            return UniTask.CompletedTask;
         }
     }
 }

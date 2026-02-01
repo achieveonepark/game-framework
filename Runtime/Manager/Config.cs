@@ -1,60 +1,56 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using GameFramework.Manager;
 using UnityEngine;
 
 namespace GameFramework
 {
-    public static partial class Core
+    public class ConfigManager : IManager
     {
-        /// <summary>
-        /// 옵션에 사용 될 데이터, PlayerPrefs로 저장 됨
-        /// </summary>
-        public static class Config
+        private readonly string dicKey = $"{Application.identifier}.configs.gameframework";
+
+        private Dictionary<string, object> _configs;
+
+        public UniTask Initialize()
         {
-            private static readonly string dicKey = $"{Application.identifier}.configs.gameframework";
+            _configs = DictionaryPrefs.LoadDictionary<string, object>(dicKey);
+            Debug.Log("[ConfigManager] Initialized");
+            return UniTask.CompletedTask;
+        }
 
-            private static Dictionary<string, object> _configs;
-
-            [RuntimeInitializeOnLoadMethod]
-            static void Initialize()
+        public void AddKey(string key, object value)
+        {
+            if (_configs.ContainsKey(key))
             {
-                _configs = DictionaryPrefs.LoadDictionary<string, object>(dicKey);
-                Log.Debug("[ConfigManager] Initialized");
+                Debug.Log($"Already key. key: {key}");
+                return;
             }
 
-            public static void AddKey(string key, object value)
-            {
-                if (_configs.ContainsKey(key))
-                {
-                    Debug.Log($"Already key. key: {key}");
-                    return;
-                }
+            _configs.Add(key, value);
+        }
 
-                _configs.Add(key, value);
+        public object GetConfig(string key)
+        {
+            if (_configs.TryGetValue(key, out var obj) is false)
+            {
+                Debug.Log($"Invalid key. key: {key}");
+                return null;
             }
 
-            public static object GetConfig(string key)
-            {
-                if (_configs.TryGetValue(key, out var obj) is false)
-                {
-                    Debug.Log($"Invalid key. key: {key}");
-                    return null;
-                }
+            return obj;
+        }
 
-                return obj;
+        public void SetConfig(string key, object value)
+        {
+            if (!_configs.ContainsKey(key))
+            {
+                Debug.Log($"Invalid key. key: {key}");
+                return;
             }
 
-            public static void SetConfig(string key, object value)
-            {
-                if (!_configs.ContainsKey(key))
-                {
-                    Debug.Log($"Invalid key. key: {key}");
-                    return;
-                }
+            _configs[key] = value;
 
-                _configs[key] = value;
-
-                DictionaryPrefs.SaveDictionary(dicKey, _configs);
-            }
+            DictionaryPrefs.SaveDictionary(dicKey, _configs);
         }
     }
 }

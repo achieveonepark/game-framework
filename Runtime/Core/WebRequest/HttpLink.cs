@@ -58,7 +58,7 @@ namespace GameFramework
 
                 if (string.IsNullOrEmpty(url))
                 {
-                    throw Core.Log.Fatal(new InvalidPathException("Url does not exist."));
+                    throw GameLog.Fatal(new InvalidPathException("Url does not exist."));
                 }
                 
                 var httpLink = Build();
@@ -72,7 +72,7 @@ namespace GameFramework
                 
                 if (string.IsNullOrEmpty(url))
                 {
-                    throw Core.Log.Fatal(new InvalidPathException("Url does not exist."));
+                    throw GameLog.Fatal(new InvalidPathException("Url does not exist."));
                 }
                 
                 var httpLink = Build();
@@ -113,7 +113,7 @@ namespace GameFramework
             {
                 if (string.IsNullOrEmpty(url))
                 {
-                    throw Core.Log.Fatal(new InvalidPathException("Url does not exist."));
+                    throw GameLog.Fatal(new InvalidPathException("Url does not exist."));
                 }
                 
                 UnityWebRequest request;
