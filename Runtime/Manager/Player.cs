@@ -62,7 +62,7 @@ namespace GameFramework
         }
 
 #if USE_QUICK_SAVE
-        private readonly QuickSave<PlayerManager> _quickSave = new ();
+        private QuickSave<PlayerManager> _quickSave = new ();
         
         public void Save()
         {

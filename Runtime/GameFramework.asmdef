@@ -46,6 +46,11 @@
             "name": "jp.hadashikick.unitaskpubsub",
             "expression": "0.0.1",
             "define": "USE_PUBSUB"
+        },
+        {
+            "name": "com.achieve.data-protector",
+            "expression": "0.0.1",
+            "define": "USE_ENCRYPT"
         }
     ],
     "noEngineReferences": false
