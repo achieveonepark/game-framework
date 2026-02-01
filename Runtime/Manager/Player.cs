@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameFramework.Manager;
 #if USE_QUICK_SAVE
+using Achieve.QuickSave;
 using MemoryPack;
 #endif
 
@@ -12,11 +13,13 @@ namespace GameFramework
     /// PlayerData를 담당하는 클래스입니다.<br>
     /// 테이블 데이터를 가공하여 인게임에 실사용되는 데이터들을 적재합니다.<br>
     /// </summary>
+    [Serializable]
 #if USE_QUICK_SAVE
     [MemoryPackable]
-#endif
-    [Serializable]
+    public partial class PlayerManager : IManager
+#else
     public class PlayerManager : IManager
+#endif
     {
         private readonly Dictionary<string, IPlayerDataContainerBase> _dataStorage = new();
 
@@ -59,17 +62,27 @@ namespace GameFramework
         }
 
 #if USE_QUICK_SAVE
-        private readonly QuickSave _quickSave = new ();
+        private readonly QuickSave<PlayerManager> _quickSave = new ();
         
         public void Save()
         {
-            _quickSave.Save(this);
+            _quickSave.SaveData(this);
         }
 
         public PlayerManager Load()
         {
-            return _quickSave.Load();
+            return _quickSave.LoadData();
         }
+        
+#if USE_ENCRYPT
+        public void SetEncrypt(string encryptionKey, int version)
+        {
+            _quickSave = new QuickSave<PlayerManager>.Builder()
+                .UseEncryption(encryptionKey)
+                .UseVersion(version)
+                .Build();
+        }
+#endif
 #endif
     }
 }

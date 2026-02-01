@@ -15,8 +15,10 @@ namespace GameFramework
     [Serializable]
     #if USE_QUICK_SAVE
     [MemoryPackable]
-    #endif
+    public partial class PlayerDataContainerBase<TKey, TValue> : IPlayerDataContainerBase
+#else
     public class PlayerDataContainerBase<TKey, TValue> : IPlayerDataContainerBase
+#endif
     {
         public string DataKey { get; protected set; }
         
