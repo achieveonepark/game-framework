@@ -95,7 +95,7 @@ namespace GameFramework
         /// <returns>this (메서드 체이닝용)</returns>
         public PopupBase SetParent(Transform transform)
         {
-            transform.parent = transform;
+            this.transform.parent = transform;
             return this;
         }
 

@@ -30,6 +30,7 @@ namespace GameFramework
 
 		public static TValue ElementAtRandom<TKey, TValue>(this Dictionary<TKey, TValue> self)
 		{
+			if (self.Count == 0) throw new InvalidOperationException("The dictionary is empty.");
 			return self.ElementAt(UnityEngine.Random.Range(0, self.Count)).Value;
 		}
 

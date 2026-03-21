@@ -205,12 +205,14 @@ namespace GameFramework
 
 		public static T First<T>(this T[] array)
 		{
+			if (array.Length == 0) throw new InvalidOperationException("The array is empty.");
 			return array[0];
 		}
 
 
 		public static T Last<T>(this T[] array)
 		{
+			if (array.Length == 0) throw new InvalidOperationException("The array is empty.");
 			return array[array.Length - 1];
 		}
 

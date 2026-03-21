@@ -828,12 +828,14 @@ namespace GameFramework
 
 		public static void SafeSetParent(this GameObject self, Component parent)
 		{
+			if (parent == null) throw new ArgumentNullException(nameof(parent));
 			SafeSetParent(self, parent.gameObject);
 		}
 
 
 		public static void SafeSetParent(this GameObject self, GameObject parent)
 		{
+			if (parent == null) throw new ArgumentNullException(nameof(parent));
 			var t = self.transform;
 			var localPosition = t.localPosition;
 			var localRotation = t.localRotation;

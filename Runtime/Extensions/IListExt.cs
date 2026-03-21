@@ -31,6 +31,7 @@ namespace GameFramework
 
 		public static T Dequeue<T>(this IList<T> self)
 		{
+			if (self.Count == 0) throw new InvalidOperationException("The list is empty.");
 			var result = self[0];
 			self.RemoveAt(0);
 			return result;
@@ -354,6 +355,7 @@ namespace GameFramework
 			int target
 		)
 		{
+			if (self.Count == 0) throw new InvalidOperationException("The list is empty.");
 			var min = self.Min(c => Math.Abs(c - target));
 			return self.First(c => Math.Abs(c - target) == min);
 		}
@@ -366,6 +368,7 @@ namespace GameFramework
 			Func<TSource, int> selector
 		)
 		{
+			if (self.Count == 0) throw new InvalidOperationException("The list is empty.");
 			var min = self.Min(c => Math.Abs(selector(c) - target));
 			return selector(self.First(c => Math.Abs(selector(c) - target) == min));
 		}
@@ -378,6 +381,7 @@ namespace GameFramework
 			Func<TSource, int> selector
 		)
 		{
+			if (self.Count == 0) throw new InvalidOperationException("The list is empty.");
 			var min = self.Min(c => Math.Abs(selector(c) - target));
 			return self.First(c => Math.Abs(selector(c) - target) == min);
 		}
@@ -424,6 +428,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => target < c).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element greater than target.");
 			var min = list.Min(c => Math.Abs(c - target));
 			return list.First(c => Math.Abs(c - target) == min);
 		}
@@ -437,6 +442,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => target < selector(c)).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element greater than target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return selector(list.First(c => Math.Abs(selector(c) - target) == min));
 		}
@@ -450,6 +456,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => target < selector(c)).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element greater than target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return list.First(c => Math.Abs(selector(c) - target) == min);
 		}
@@ -500,6 +507,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => c <= target).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element less than or equal to target.");
 			var min = list.Min(c => Math.Abs(c - target));
 			return list.First(c => Math.Abs(c - target) == min);
 		}
@@ -513,6 +521,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => selector(c) <= target).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element less than or equal to target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return selector(list.First(c => Math.Abs(selector(c) - target) == min));
 		}
@@ -526,6 +535,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => selector(c) <= target).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element less than or equal to target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return list.First(c => Math.Abs(selector(c) - target) == min);
 		}
@@ -576,6 +586,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => target <= c).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element greater than or equal to target.");
 			var min = list.Min(c => Math.Abs(c - target));
 			return list.First(c => Math.Abs(c - target) == min);
 		}
@@ -589,6 +600,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => target <= selector(c)).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element greater than or equal to target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return selector(list.First(c => Math.Abs(selector(c) - target) == min));
 		}
@@ -602,6 +614,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => target <= selector(c)).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element greater than or equal to target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return list.First(c => Math.Abs(selector(c) - target) == min);
 		}
@@ -652,6 +665,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => c < target).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element strictly less than target.");
 			var min = list.Min(c => Math.Abs(c - target));
 			return list.First(c => Math.Abs(c - target) == min);
 		}
@@ -665,6 +679,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => selector(c) < target).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element strictly less than target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return selector(list.First(c => Math.Abs(selector(c) - target) == min));
 		}
@@ -678,6 +693,7 @@ namespace GameFramework
 		)
 		{
 			var list = self.Where(c => selector(c) < target).ToArray();
+			if (list.Length == 0) throw new InvalidOperationException("No element strictly less than target.");
 			var min = list.Min(c => Math.Abs(selector(c) - target));
 			return list.First(c => Math.Abs(selector(c) - target) == min);
 		}

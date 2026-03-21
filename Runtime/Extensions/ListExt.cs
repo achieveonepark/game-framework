@@ -119,7 +119,7 @@ namespace GameFramework
 
 		public static void RemoveSince<T>(this List<T> self, int count)
 		{
-			while (count <= self.Count)
+			while (count < self.Count)
 			{
 				self.RemoveAt(self.Count - 1);
 			}

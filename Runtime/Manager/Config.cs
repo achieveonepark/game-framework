@@ -24,7 +24,7 @@ namespace GameFramework
         /// </summary>
         public UniTask Initialize()
         {
-            _configs = DictionaryPrefs.LoadDictionary<string, object>(dicKey);
+            _configs = DictionaryPrefs.LoadDictionary<string, object>(dicKey) ?? new Dictionary<string, object>();
             Debug.Log("[ConfigManager] Initialized");
             return UniTask.CompletedTask;
         }
