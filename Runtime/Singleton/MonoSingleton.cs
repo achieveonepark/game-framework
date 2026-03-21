@@ -29,7 +29,7 @@ namespace GameFramework
             {
                 if (instance == null)
                 {
-                    instance = FindObjectOfType<T>();
+                    instance = FindAnyObjectByType<T>();
                     if (instance == null)
                     {
                         GameObject obj = new GameObject();

@@ -12,6 +12,8 @@ namespace GameFramework
     /// <typeparam name="T"></typeparam>
     public abstract class Singleton<T> : ISingleton where T : Singleton<T>, new()
     {
+        private static readonly object s_lock = new object();
+
         /// <summary>
         /// The instance.
         /// </summary>
@@ -32,8 +34,7 @@ namespace GameFramework
             {
                 if (instance == null)
                 {
-                    //ensure that only one thread can execute
-                    lock (typeof(T))
+                    lock (s_lock)
                     {
                         if (instance == null)
                         {

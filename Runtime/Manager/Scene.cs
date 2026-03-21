@@ -13,7 +13,7 @@ namespace GameFramework
         private bool _isLoading;
 
         public event Action OnSceneLoadStarted;
-        public static event Action OnSceneLoadCompleted;
+        public event Action OnSceneLoadCompleted;
 
         public UniTask Initialize()
         {
@@ -38,7 +38,6 @@ namespace GameFramework
             OnSceneLoadStarted?.Invoke();
             await UnitySceneManager.LoadSceneAsync(sceneName).ToUniTask();
 
-            OnSceneLoadCompleted?.Invoke();
             var scene = UnitySceneManager.GetActiveScene();
             var roots = scene.GetRootGameObjects();
 
@@ -53,14 +52,12 @@ namespace GameFramework
 
             if (Current == null)
             {
-                throw new NullReferenceException($"Not found {nameof(scene)} in SceneManager.");
+                _isLoading = false;
+                throw new NullReferenceException($"Not found IScene component in loaded scene '{sceneName}'.");
             }
 
+            OnSceneLoadCompleted?.Invoke();
             _isLoading = false;
-
-            // Important: Events should be cleared if they are meant to be transient per load
-            // OnSceneLoadStarted = null; 
-            // OnSceneLoadCompleted = null; 
 
             await Current.OnSceneStart();
         }

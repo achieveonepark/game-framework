@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using GameFramework.Manager;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace GameFramework
 
         private float _timer;
         private float _startTimer;
+        private CancellationTokenSource _cts;
 
         public DateTime Now => time.AddSeconds(_timer - _startTimer);
 
@@ -27,10 +29,16 @@ namespace GameFramework
         {
             await GetNetworkTimeAsync();
             _startTimer = UnityEngine.Time.unscaledTime;
-            OnCheck_1Sec().Forget(); // Start the continuous check
-            // Assuming LogManager exists and can be retrieved from Core or is static
-            // Core.Get<LogManager>()?.Debug("[TimeManager] Initialized");
-            Debug.Log("[TimeManager] Initialized"); // Using Debug.Log for now
+            _cts = new CancellationTokenSource();
+            OnCheck_1Sec(_cts.Token).Forget();
+            Debug.Log("[TimeManager] Initialized");
+        }
+
+        public void Dispose()
+        {
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = null;
         }
 
         private async UniTask GetNetworkTimeAsync()
@@ -42,11 +50,11 @@ namespace GameFramework
             time = DateTime.Parse(response.dateTime);
         }
 
-        private async UniTask OnCheck_1Sec()
+        private async UniTask OnCheck_1Sec(CancellationToken ct)
         {
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
-                await UniTask.Delay(1000);
+                await UniTask.Delay(1000, cancellationToken: ct);
                 _timer = UnityEngine.Time.unscaledTime;
                 OnEvent1Sec?.Invoke();
             }
