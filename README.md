@@ -1,93 +1,78 @@
 # Game Framework
 
-Unity 게임 개발을 빠르게 시작할 수 있도록 설계된 미리 구성된 시스템과 확장 기능 모음입니다.
+**한국어 | [English](README.en.md) | [日本語](README.ja.md)**
 
-모든 매니저는 정적 클래스 `GameFramework.Core`를 통해 등록 및 접근합니다.
+Unity 게임 개발을 가속화하기 위해 설계된 사전 구축된 시스템과 확장 기능 모음입니다.
+
+이 프레임워크는 중앙 정적 클래스 `GameFramework.Core` 아래에 구성되어 있으며, 다양한 매니저와 시스템을 포함하고 있습니다.
 
 ## UPM 설치
 
-1. Unity Package Manager를 엽니다 (`Window > Package Manager`).
-2. `+` 버튼을 클릭하고 `Add package from git URL...`을 선택합니다.
-3. 아래 URL을 입력합니다: `https://github.com/achieveonepark/game-framework.git`
+1.  Unity Package Manager를 엽니다 (`Window > Package Manager`).
+2.  `+` 아이콘을 클릭하고 `Add package from git URL...`을 선택합니다.
+3.  다음 URL을 입력합니다: `https://github.com/achieveonepark/game-framework.git`
 
 ## 의존성
 
+이 프레임워크는 전체 기능을 위해 일부 외부 패키지에 의존합니다.
+
 ### 필수
-- **[UniTask](https://github.com/Cysharp/UniTask):** 프레임워크 전반의 비동기 처리에 필요합니다. Game Framework 설치 **전에** 먼저 설치해 주세요.
+-   **[UniTask](https://github.com/Cysharp/UniTask):** 프레임워크 전반의 비동기 작업에 필요합니다. Game Framework 패키지 설치 **전에** 먼저 설치해주세요.
 
-### 선택
-추가 기능을 활성화하려면 아래 패키지를 설치하세요.
+### 선택사항
+아래 패키지를 설치하면 추가 기능을 활성화할 수 있습니다.
 
-- **[UniTaskPubSub](https://github.com/hadashiA/UniTaskPubSub):** `UIBindingManager`의 반응형 이벤트 기반 UI 기능을 활성화합니다. 사용 시 프로젝트 Scripting Define Symbols에 `USE_PUBSUB`를 추가하세요.
-- **[QuickSave](https://github.com/achieveonepark/quicksave):** `PlayerManager`의 데이터 영속성 기능을 활성화합니다. 사용 시 `USE_QUICK_SAVE`를 Scripting Define Symbols에 추가하세요.
+-   **[UniTaskPubSub](https://github.com/hadashiA/UniTaskPubSub):** 반응형 이벤트 기반 UI를 위한 `UIBindingManager`를 활성화합니다.
+-   **[QuickSave](https://github.com/achieveonepark/quicksave):** `Core.Player`의 데이터 영속성 기능을 활성화합니다. 사용하려면 프로젝트의 Scripting Define Symbols에 `USE_QUICK_SAVE`를 추가해야 합니다.
 
-## 초기화
+## 기능 & API
 
-모든 매니저는 `[RuntimeInitializeOnLoadMethod]` 어트리뷰트를 통해 씬 로드 전에 자동으로 초기화됩니다.
-
-```csharp
-// 자동 실행 (별도 호출 불필요)
-await Core.InitializeAllManagers();
-```
-
-커스텀 매니저를 직접 등록할 수도 있습니다.
-
-```csharp
-await Core.Register(new MyCustomManager());
-```
-
-## 기능 및 API
+대부분의 프레임워크 모듈은 정적 클래스 `GameFramework.Core` 내의 중첩 클래스로 제공됩니다.
 
 ### 접근 패턴
-
-모든 매니저는 `Core.Get<T>()`를 통해 접근합니다.
-
-```csharp
-var config = Core.Get<ConfigManager>();
-var time   = Core.Get<TimeManager>();
-var sound  = Core.Get<SoundManager>();
-```
-
-`PopupManager`는 `PersistentMonoSingleton`으로, `Instance` 프로퍼티로 접근합니다.
-
-```csharp
-PopupManager.Instance.Open<MyPopup>();
-```
+-   **정적 클래스**: 직접 접근합니다 (예: `Core.Time.TimeScale`).
+-   **MonoBehaviour 싱글톤**: `Instance` 프로퍼티를 통해 접근합니다 (예: `Core.Sound.Instance.PlayBGM()`). 씬에 해당 GameObject가 있어야 합니다.
 
 ### 시스템 모듈
-
-| 클래스 | 접근 방식 | 설명 |
+| 클래스 | 접근 패턴 | 설명 |
 | :--- | :--- | :--- |
-| `ConfigManager` | `Core.Get<ConfigManager>()` | PlayerPrefs 기반 키-값 설정 관리 |
-| `PlayerManager` | `Core.Get<PlayerManager>()` | 컨테이너 기반 런타임 플레이어 데이터 관리 |
-| `TimeManager` | `Core.Get<TimeManager>()` | 타임스케일 제어 및 NTP 서버 시간 제공 |
-| `InputManager` | `Core.Get<InputManager>()` | `UnityEngine.Input` 래퍼 |
-| `SoundManager` | `Core.Get<SoundManager>()` | BGM / SFX 재생 관리 |
-| `SceneManager` | `Core.Get<SceneManager>()` | 비동기 씬 로드 및 언로드 |
-| `IAPManager` | `Core.Get<IAPManager>()` | 인앱 결제 처리 훅 |
-| `PopupManager` | `PopupManager.Instance` | UI 팝업 인스턴스 생성 및 수명 주기 관리 |
+| `Core.Log` | Static | 다양한 레벨의 콘솔 로깅을 처리합니다. |
+| `Core.Config` | Static | PlayerPrefs에 저장된 키-값 설정을 관리합니다. |
+| `Core.Player` | Static | "컨테이너"를 통한 런타임 플레이어 데이터의 중앙 집중 관리. |
+| `Core.Time` | Static | 글로벌 타임 스케일을 제어하고 현재 시각을 제공합니다. |
+| `Core.Input` | Static | 켜고 끄는 스위치가 있는 `UnityEngine.Input` 래퍼. |
+| `Core.Pool` | Static | `UnityEngine.Pool`을 사용한 프리팹의 범용 오브젝트 풀링. |
+| `Core.IAP` | Static | 인앱 구매 처리를 위한 간단한 훅. |
+| `Core.Sound` | Singleton | BGM 및 SFX 재생을 관리합니다. |
+| `Core.Scene` | Singleton | 씬 로드 및 언로드를 관리합니다. |
+| `Core.Popup` | Singleton | UI 팝업의 인스턴스화와 라이프사이클을 관리합니다. |
 
----
+### 기타 기능
+-   **유틸리티 & 확장 메서드**: Unity 및 C# 내장 타입에 대한 방대한 확장 메서드 컬렉션. `Runtime/Extensions` 폴더를 참고하세요.
+-   **UI 컴포넌트**: `SafeArea`, `Draggable` 등의 헬퍼 컴포넌트.
 
 ## 빠른 시작 예제
 
-### `ConfigManager`
-PlayerPrefs에 저장되는 간단한 설정 관리.
-
+### `Core.Log`
+카테고리별 콘솔 로깅을 처리합니다.
 ```csharp
-var config = Core.Get<ConfigManager>();
-
-// 키가 없을 때 초기값 설정
-config.AddKey("BGMVolume", 0.8f);
-
-// 값 읽기 / 쓰기
-config.SetConfig("BGMVolume", 0.7f);
-float volume = (float)config.GetConfig("BGMVolume");
+Core.Log.Debug("디버그 메시지입니다.");
+Core.Log.Info("중요한 정보에 사용합니다.");
+Core.Log.Warning("뭔가 잘못되었을 수 있습니다.");
 ```
 
----
+### `Core.Config`
+`PlayerPrefs`에 저장된 간단한 데이터를 관리합니다.
+```csharp
+// 키가 없으면 초기값을 설정
+Core.Config.AddKey("BGMVolume", 0.8f);
 
-### `PlayerManager` (데이터 관리)
+// 값 가져오기 및 설정
+Core.Config.SetConfig("BGMVolume", 0.7f);
+float currentVolume = (float)Core.Config.GetConfig("BGMVolume");
+```
+
+### `Core.Player` (데이터 관리)
 컨테이너 클래스를 통해 런타임 데이터를 관리합니다.
 
 **1. 데이터와 컨테이너를 정의합니다.**
@@ -99,12 +84,12 @@ public class CharacterData : PlayerDataBase
     public int Level;
 }
 
-// 데이터를 담는 컨테이너
+// 데이터를 보유하는 컨테이너
 public class CharacterDataContainer : PlayerDataContainerBase<int, CharacterData>
 {
     public CharacterDataContainer()
     {
-        // IMPORTANT: DataKey는 반드시 클래스 이름과 일치해야 합니다.
+        // 중요: GetContainer<T>가 동작하려면 DataKey가 클래스 이름과 일치해야 합니다!
         DataKey = typeof(CharacterDataContainer).Name;
     }
 }
@@ -112,114 +97,43 @@ public class CharacterDataContainer : PlayerDataContainerBase<int, CharacterData
 
 **2. 컨테이너를 등록하고 사용합니다.**
 ```csharp
-// 게임 시작 시 컨테이너 생성 및 등록
-var container = new CharacterDataContainer();
-container.Add(1, new CharacterData { Id = 1, Name = "Hero", Level = 1 });
-Core.Get<PlayerManager>().AddContainer(container);
+// 게임 시작 시 컨테이너를 생성하고 등록
+var characterContainer = new CharacterDataContainer();
+characterContainer.Add(1, new CharacterData { Id = 1, Name = "Hero", Level = 1 });
+Core.Player.AddContainer(characterContainer);
 
-// 다른 곳에서 데이터 조회 및 사용
-var myChars = Core.Get<PlayerManager>().GetContainer<CharacterDataContainer>();
+// 다른 곳에서 데이터를 가져와 사용
+var myChars = Core.Player.GetContainer<CharacterDataContainer>();
 var mainChar = myChars.GetInfo(1);
 mainChar.Level++;
 
-// 전체 데이터 저장/불러오기 (USE_QUICK_SAVE 정의 필요)
-Core.Get<PlayerManager>().Save();
-Core.Get<PlayerManager>().Load();
+// 모든 데이터 저장/로드 (USE_QUICK_SAVE 정의 필요)
+Core.Player.Save();
+Core.Player.Load();
 ```
 
----
 
-### `TimeManager`
-NTP 서버에서 현재 시간을 가져오고, 타임스케일을 제어합니다.
-
+### `Core.Popup` (Singleton)
+`Core.Popup` 스크립트와 팝업 프리팹 목록이 있는 `PopupManager` GameObject가 필요합니다.
 ```csharp
-var time = Core.Get<TimeManager>();
+// 매니저의 목록에서 특정 타입의 팝업을 엽니다
+// 팝업의 Open() 메서드가 자동으로 호출됩니다
+var myPopup = Core.Popup.Instance.Open<MyAwesomePopup>();
 
-// 게임 속도 2배로 설정
-time.TimeScale = 2.0f;
-
-// NTP 서버 기반 현재 시간 가져오기
-DateTime now = time.Now;
-
-// 1초마다 호출되는 이벤트 구독
-time.OnEvent1Sec += () => Debug.Log("1초 경과");
-```
-
----
-
-### `PopupManager`
-씬에 `PopupManager` GameObject가 있어야 합니다.
-
-```csharp
-// 특정 타입의 팝업 열기
-var popup = PopupManager.Instance.Open<MyAwesomePopup>();
-
-// 데이터를 전달하며 팝업 열기
+// 팝업을 열 때 데이터 전달
 var data = new MyPopupData { Message = "안녕하세요!" };
-PopupManager.Instance.Open<MyAwesomePopup>(data);
+Core.Popup.Instance.Open<MyAwesomePopup>(data);
 
 // 팝업 닫기
-popup.Close();
+myPopup.Close();
 ```
 
----
-
-### `HttpLink`
-빌더 패턴 기반 HTTP 요청 래퍼 (async/await 지원).
-
+### `Core.Time`
+Unity의 Time 및 `DateTime`을 위한 래퍼입니다.
 ```csharp
-// GET 요청 후 JSON 역직렬화
-var result = await new HttpLink.Builder()
-    .SetUrl("https://api.example.com/data")
-    .GetAsync<MyResponseData>();
+// 게임 속도를 2배로 설정
+Core.Time.TimeScale = 2.0f;
 
-// POST 요청
-var response = await new HttpLink.Builder()
-    .SetUrl("https://api.example.com/submit")
-    .SetBody(new MyRequestData { Value = 42 })
-    .PostAsync<MyResponseData>();
+// 현재 실제 시간 가져오기
+DateTime now = Core.Time.Now;
 ```
-
----
-
-## UI 컴포넌트
-
-| 컴포넌트 | 설명 |
-| :--- | :--- |
-| `SafeArea` | 기기 SafeArea에 맞게 RectTransform을 자동 조정 |
-| `Draggable` | Physics2D 기반 드래그 앤 드롭 기능 제공 |
-| `BaseUI` | 이름 접두사 기반 컴포넌트 자동 캐싱 (`Img_`, `Txt_`, `Btn_` 등) |
-| `PopupBase` | Open / Close / Refresh 수명 주기를 가진 팝업 베이스 클래스 |
-| `ItemListPopup<T>` | 리스트 기반 팝업 제네릭 템플릿 |
-| `ObjectTouchManager` | 2D 오브젝트 터치/클릭 이벤트 중앙 관리 |
-| `UIBindingManager` | 반응형 이벤트 기반 UI (USE_PUBSUB 정의 필요) |
-
----
-
-## 유틸리티
-
-### 싱글톤 베이스
-
-| 클래스 | 설명 |
-| :--- | :--- |
-| `Singleton<T>` | 스레드 안전 C# 클래스 기반 싱글톤 |
-| `MonoSingleton<T>` | 씬 전환 시 파괴되는 MonoBehaviour 싱글톤 |
-| `PersistentMonoSingleton<T>` | 씬 전환 후에도 유지되는 MonoBehaviour 싱글톤 |
-
-### 공통 유틸리티
-
-| 클래스 | 설명 |
-| :--- | :--- |
-| `CachableMonoBehaviour` | Transform / RectTransform 캐싱을 제공하는 MonoBehaviour |
-| `MultiTask` | 순차 UniTask 실행 헬퍼 |
-| `Selectable<T>` | 값 변경 콜백을 가진 Observable 값 컨테이너 |
-| `MultiDictionary<TKey, TValue>` | 하나의 키에 여러 값을 매핑하는 딕셔너리 |
-
-### 확장 메서드
-
-`Runtime/Extensions` 폴더에 50개 이상의 Unity / C# 타입 확장 메서드가 포함되어 있습니다.
-
-- **컬렉션**: `List`, `Array`, `IEnumerable`, `Dictionary` 등
-- **Unity 타입**: `GameObject`, `Component`, `Transform`, `Vector2/3`, `Color`, `Rect` 등
-- **UI**: `RectTransform`, `Text`, `Image`, `Button` 등
-- **기타**: `String`, `DateTime`, `Enum`, `PlayerPrefs`, `Camera` 등
