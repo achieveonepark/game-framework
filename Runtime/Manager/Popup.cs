@@ -8,13 +8,11 @@ namespace GameFramework
 {
     public class PopupManager : PersistentMonoSingleton<PopupManager>, IManager
     {
-        private List<PopupBase> _instantiatedPopup = new List<PopupBase>();
-        [SerializeField] List<PopupBase> _popups = new List<PopupBase>(); // Assuming TryGetValueForType is an extension for List<PopupBase>
+        private readonly Dictionary<Type, PopupBase> _instantiatedPopups = new Dictionary<Type, PopupBase>();
+        [SerializeField] List<PopupBase> _popups = new List<PopupBase>();
 
         public UniTask Initialize()
         {
-            // The PersistentMonoSingleton's Awake handles its own initialization.
-            // We can add specific manager setup here if needed.
             Debug.Log("[PopupManager] Initialized");
             return UniTask.CompletedTask;
         }
@@ -23,29 +21,22 @@ namespace GameFramework
         {
             Type popupType = typeof(T);
 
-            // Assuming TryGetValueForType is an extension method somewhere
-            if (this._popups.TryGetValueForType(popupType, out var popup) is false)
+            if (!_instantiatedPopups.TryGetValue(popupType, out var existing))
             {
-                Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
-                return null;
+                if (_popups.TryGetValueForType(popupType, out var prefab) is false)
+                {
+                    Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
+                    return null;
+                }
+
+                var instance = (T)Instantiate(prefab, this.transform);
+                _instantiatedPopups[popupType] = instance;
+                (isRefresh ? (Action)instance.Refresh : instance.Open)();
+                return instance;
             }
 
-            var result = (T)popup;
-
-            if (result.Active && isRefresh is false)
-            {
-                return result;
-            }
-
-            if (IsInstantiated(result) is false)
-            {
-                var instantiatedPopup = Instantiate(result, this.transform);
-                this._instantiatedPopup.Add(instantiatedPopup);
-
-                (isRefresh ? (Action)instantiatedPopup.Refresh : instantiatedPopup.Open)();
-                return instantiatedPopup;
-            }
-
+            var result = (T)existing;
+            if (result.Active && isRefresh is false) return result;
             (isRefresh ? (Action)result.Refresh : result.Open)();
             return result;
         }
@@ -54,35 +45,24 @@ namespace GameFramework
         {
             Type popupType = typeof(T);
 
-            if (this._popups.TryGetValueForType(popupType, out var popup) is false)
+            if (!_instantiatedPopups.TryGetValue(popupType, out var existing))
             {
-                Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
-                return null;
+                if (_popups.TryGetValueForType(popupType, out var prefab) is false)
+                {
+                    Debug.Log($"[PopupFactory] Could not find popup type {popupType.Name}");
+                    return null;
+                }
+
+                var instance = (T)Instantiate(prefab, this.transform);
+                _instantiatedPopups[popupType] = instance;
+                (isRefresh ? (Action<object>)instance.Refresh : instance.Open)(data);
+                return instance;
             }
 
-            var result = (T)popup;
-
-            if (result.Active && isRefresh is false)
-            {
-                return result;
-            }
-
-            if (IsInstantiated(result) is false)
-            {
-                var instantiatedPopup = Instantiate(result, this.transform);
-                this._instantiatedPopup.Add(instantiatedPopup);
-
-                (isRefresh ? (Action<object>)instantiatedPopup.Refresh : instantiatedPopup.Open)(data);
-                return instantiatedPopup;
-            }
-
+            var result = (T)existing;
+            if (result.Active && isRefresh is false) return result;
             (isRefresh ? (Action<object>)result.Refresh : result.Open)(data);
             return result;
-        }
-
-        private bool IsInstantiated(PopupBase popupBase)
-        {
-            return this._instantiatedPopup.Contains(popupBase);
         }
     }
 }

@@ -7,8 +7,9 @@ namespace GameFramework
     {
         public bool Active => gameObject.activeSelf;
 
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Caching();
         }
 
@@ -51,9 +52,9 @@ namespace GameFramework
             return this;
         }
 
-        public PopupBase SetParent(Transform transform)
+        public PopupBase SetParent(Transform parent)
         {
-            transform.parent = transform;
+            transform.SetParent(parent, false);
             return this;
         }
 

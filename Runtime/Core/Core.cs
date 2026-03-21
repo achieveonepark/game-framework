@@ -15,6 +15,8 @@ namespace GameFramework
         /// 게임 시작 시 한 번 호출되어야 합니다.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void OnBeforeSceneLoad() => InitializeAllManagers().Forget();
+
         public static async UniTask InitializeAllManagers()
         {
             Debug.Log("[Core] Initializing all managers...");

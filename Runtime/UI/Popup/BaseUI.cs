@@ -12,7 +12,7 @@ namespace GameFramework
     {
         private Dictionary<string, Component> _componentCache = new Dictionary<string, Component>();
 
-        private void Awake()
+        protected virtual void Awake()
         {
             SetCacheComponent();
         }

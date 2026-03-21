@@ -121,8 +121,9 @@ namespace GameFramework
                 // HTTP 메서드에 따른 요청 생성
                 if (method == UnityWebRequest.kHttpVerbPOST)
                 {
-                    request = UnityWebRequest.PostWwwForm(url, requestBody);
-                    
+                    request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
+                    request.downloadHandler = new DownloadHandlerBuffer();
+
                     if (!string.IsNullOrEmpty(requestBody))
                     {
                         byte[] bodyRaw = Encoding.UTF8.GetBytes(requestBody);

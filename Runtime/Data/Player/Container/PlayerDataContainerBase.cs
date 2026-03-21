@@ -21,8 +21,8 @@ namespace GameFramework
 #endif
     {
         public string DataKey { get; protected set; }
-        
-        protected Dictionary<TKey, TValue> _dataDic;
+
+        protected Dictionary<TKey, TValue> _dataDic = new Dictionary<TKey, TValue>();
 
         public void Add(TKey key, TValue value)
         {
